@@ -4,11 +4,11 @@
 trap 'kill $(jobs -p)' EXIT
 
 if [ "$ELASTICSEARCH_HOSTNAME" != "" ]; then
-    sed -i -r "s/^elasticsearch_url: .+/elasticsearch_url: \"http:\/\/${ELASTICSEARCH_HOSTNAME}\/\"/" /opt/kibana/config/kibana.yml
+    sed -i -r "s/^(#\s+)?elasticsearch.url: .+/elasticsearch.url: \"http:\/\/${ELASTICSEARCH_HOSTNAME}\/\"/" /opt/kibana/config/kibana.yml
 fi
 
 if [ "$KIBANA_PORT" != "" ]; then
-    sed -i -r "s/^port: .+/port: $KIBANA_PORT/" /opt/kibana/config/kibana.yml
+    sed -i -r "s/^(#\s+)?server.port: .+/server.port: $KIBANA_PORT/" /opt/kibana/config/kibana.yml
 fi
 
 supervisord

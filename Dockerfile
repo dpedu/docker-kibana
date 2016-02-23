@@ -1,13 +1,14 @@
 FROM ubuntu:trusty
 
-RUN apt-get update ;\
-    apt-get install -y curl openjdk-7-jre-headless supervisor ;\
-    mkdir /opt/kibana ;\
-    curl -o /tmp/kibana4.tar.gz https://download.elastic.co/kibana/kibana/kibana-4.4.1-linux-x64.tar.gz ;\
-    tar -C /opt/kibana/ -zxvf /tmp/kibana4.tar.gz  --strip-components=1 ;\
-    rm /tmp/kibana4.tar.gz ;\
-    useradd kibana ;\
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y curl openjdk-7-jre-headless supervisor && \
+    mkdir /opt/kibana && \
+    curl -o /tmp/kibana4.tar.gz https://download.elastic.co/kibana/kibana/kibana-4.4.1-linux-x64.tar.gz && \
+    tar -C /opt/kibana/ -zxvf /tmp/kibana4.tar.gz  --strip-components=1 && \
+    rm /tmp/kibana4.tar.gz && \
+    useradd kibana && \
+    rm -rf /var/lib/apt/lists/* && \
+    chown -R kibana:kibana /opt/kibana/optimize/
 
 ADD start /start
 ADD kibana.conf /etc/supervisor/conf.d/kibana.conf
