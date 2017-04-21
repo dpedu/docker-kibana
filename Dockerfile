@@ -1,7 +1,7 @@
 FROM ubuntu:trusty
 
 RUN apt-get update && \
-    apt-get install -y curl openjdk-7-jre-headless supervisor && \
+    apt-get install -y curl supervisor && \
     mkdir /opt/kibana && \
     curl -o /tmp/kibana.tar.gz https://artifacts.elastic.co/downloads/kibana/kibana-5.3.1-linux-x86_64.tar.gz && \
     tar -C /opt/kibana/ -zxvf /tmp/kibana.tar.gz  --strip-components=1 && \
