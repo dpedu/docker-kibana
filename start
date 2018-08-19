@@ -4,13 +4,13 @@
 trap 'kill $(jobs -p)' EXIT
 
 if [ "$ELASTICSEARCH_HOSTNAME" != "" ]; then
-    sed -i -r "s/^(#\s*)?elasticsearch.url: .+/elasticsearch.url: \"http:\/\/${ELASTICSEARCH_HOSTNAME}\/\"/" /opt/kibana/config/kibana.yml
-fi
-
-if [ "$KIBANA_PORT" != "" ]; then
-    sed -i -r "s/^(#\s*)?server.port: .+/server.port: $KIBANA_PORT/" /opt/kibana/config/kibana.yml
+    sed -i -r "s/^(#\s?+)?elasticsearch.url: .+/elasticsearch.url: \"http:\/\/${ELASTICSEARCH_HOSTNAME}\/\"/" /opt/kibana/config/kibana.yml
 fi
 
 sed -i -r 's/^(#\s*)?server.host: .+/server.host: "0.0.0.0"/' /opt/kibana/config/kibana.yml
 
-supervisord
+if [ "$KIBANA_PORT" != "" ]; then
+    sed -i -E "s/^(#\s?+)?server.port: .+/server.port: $KIBANA_PORT/" /opt/kibana/config/kibana.yml
+fi
+
+su -c /opt/kibana/bin/kibana kibana

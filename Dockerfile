@@ -1,18 +1,18 @@
-FROM ubuntu:trusty
+FROM ubuntu:bionic
 
 RUN apt-get update && \
-    apt-get install -y curl supervisor && \
-    mkdir /opt/kibana && \
-    curl -o /tmp/kibana.tar.gz https://artifacts.elastic.co/downloads/kibana/kibana-5.3.1-linux-x86_64.tar.gz && \
+    apt-get install -y wget && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN mkdir /opt/kibana && \
+    wget -qO /tmp/kibana.tar.gz https://artifacts.elastic.co/downloads/kibana/kibana-6.3.2-linux-x86_64.tar.gz && \
     tar -C /opt/kibana/ -zxvf /tmp/kibana.tar.gz  --strip-components=1 && \
     rm /tmp/kibana.tar.gz && \
     useradd kibana && \
-    rm -rf /var/lib/apt/lists/* && \
-    chown -R kibana:kibana /opt/kibana/optimize/
+    chown -R kibana:kibana /opt/kibana/optimize/ && \
+    sed -i -E "s/^(#\s?+)?server.host: .+/server.host: 0.0.0.0/" /opt/kibana/config/kibana.yml
 
 ADD start /start
-ADD kibana.conf /etc/supervisor/conf.d/kibana.conf
-ADD supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 
 ENTRYPOINT ["/start"]
 EXPOSE 5601
