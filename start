@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Cleanly kill supervisor when container is stopped
-trap 'kill $(jobs -p)' EXIT
-
 if [ "$ELASTICSEARCH_HOSTNAME" != "" ]; then
     sed -i -r "s/^(#\s?+)?elasticsearch.url: .+/elasticsearch.url: \"http:\/\/${ELASTICSEARCH_HOSTNAME}\/\"/" /opt/kibana/config/kibana.yml
 fi
@@ -11,6 +8,10 @@ sed -i -r 's/^(#\s*)?server.host: .+/server.host: "0.0.0.0"/' /opt/kibana/config
 
 if [ "$KIBANA_PORT" != "" ]; then
     sed -i -E "s/^(#\s?+)?server.port: .+/server.port: $KIBANA_PORT/" /opt/kibana/config/kibana.yml
+fi
+
+if [ "$KIBANA_INDEX" != "" ]; then
+    sed -i -E "s/^(#\s?+)?kibana\.index: .+/kibana.index: $KIBANA_INDEX/" /opt/kibana/config/kibana.yml
 fi
 
 su -c /opt/kibana/bin/kibana kibana
